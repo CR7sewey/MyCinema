@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 //DTO
-@kotlinx.serialization.InternalSerializationApi
+//@kotlinx.serialization.InternalSerializationApi
 data class MovieDTO(
     val id: Int,
     val title: String,

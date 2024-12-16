@@ -1,5 +1,6 @@
 package com.example.mycinema
 
+import com.google.gson.internal.GsonBuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import retrofit2.Retrofit
@@ -11,7 +12,7 @@ object RetroFitClient {
     private val httpClient: OkHttpClient
         get() {
             val clientBuilder = OkHttpClient.Builder()
-            val token = ""
+            val token = BuildConfig.API_KEY
 
             clientBuilder.addInterceptor { it ->
                 val original: Request = it.request()
@@ -32,4 +33,3 @@ object RetroFitClient {
     }
 
 }
-
