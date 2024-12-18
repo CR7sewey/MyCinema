@@ -16,14 +16,14 @@ object RetroFitClient {
 
             clientBuilder.addInterceptor { it ->
                 val original: Request = it.request()
-                val requestBuilder: Request.Builder = original.newBuilder().header("Authorization", "Bearer: ${token}")
+                val requestBuilder: Request.Builder = original.newBuilder().header("Authorization", "Bearer $token")
                 val request: Request = requestBuilder.build()
                 it.proceed(request)
             }
             return  clientBuilder.build()
         }
-
-    private const val BASE_URL = "https://www.themoviedb.org/3/"
+    //https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=
+    private const val BASE_URL = "https://api.themoviedb.org/3/"
     val retrofit: Retrofit by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)

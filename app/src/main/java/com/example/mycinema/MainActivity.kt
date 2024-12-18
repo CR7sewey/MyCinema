@@ -29,30 +29,35 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MyCinemaTheme {
+                println("AQUI")
                 var nowPlayingMovies by remember { mutableStateOf<List<MovieDTO>>(emptyList()) }
                 val apiService = RetroFitClient.retrofit.create(ApiService::class.java)
                 val callNowPlaying = apiService.getCurrentMovies()
-
+                println("AQUI 2")
+                println(nowPlayingMovies)
+                println(callNowPlaying.toString())
 
                 callNowPlaying.enqueue(object : Callback<MovieResponse> {
                     override fun onResponse(
                         call: Call<MovieResponse?>,
                         response: Response<MovieResponse?>
                     ) {
-                        if (!response.isSuccessful) {
-                            Log.d("MainActivity", response.errorBody().toString())
-                        }
-                        else {
+                        println("AQUI 4")
+                        println(response)
+                        if (response.isSuccessful) {
                             val movies = response.body()?.results
                             if (movies != null) {
                                 nowPlayingMovies = movies
-                                }
+                                println("AQUI 3")
+                            }
                         }
-                        TODO("Not yet implemented")
+                        else {
+                            println("AQUI 5")
+                            Log.d("MainActivity", "Request Error :: ${response.errorBody()}")
+                        }
                     }
 
                     override fun onFailure(call: Call<MovieResponse?>, t: Throwable) {
-                        TODO("Not yet implemented")
                         Log.d("MainActivity", "Network Error :: ${t.message}")
 
                     }
