@@ -11,7 +11,14 @@ data class MovieDTO(
     val overview: String,
     @SerializedName("poster_path")
     val postPath: String,
-)
+) {
+    val posterFullPath: String
+        get () {
+            val currentPost = this.postPath
+            val path = "https://image.tmdb.org/t/p/original"
+            return "$path$currentPost"
+        }
+}
 
 
 /*

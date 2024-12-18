@@ -6,18 +6,24 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.example.mycinema.ui.theme.MyCinemaTheme
 import retrofit2.Call
 import retrofit2.Callback
@@ -65,12 +71,7 @@ class MainActivity : ComponentActivity() {
 
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     //Log.i("TESTE", apiService.getCurrentMovies().toString())
-                    LazyColumn {
-                        items(nowPlayingMovies) {
-                                current ->CurrentMovies(name = current.title, modifier = Modifier.padding(innerPadding), onClick = {
-                            Log.i("Name", current.title)
-                        }) }
-                    }
+                        CurrentMovies(nowPlayingMovies, modifier = Modifier.padding(innerPadding), onClick = {title -> Log.i("AQUI",title)})
                 }
             }
         }
@@ -78,11 +79,22 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun CurrentMovies(name: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier.clickable(onClick = onClick)
-    )
+fun CurrentMovies(nowPlayingMovies: List<MovieDTO>, modifier: Modifier, onClick: (title: String) -> Unit) {
+    LazyRow(modifier = modifier.padding(8.dp)) {
+        items(nowPlayingMovies) { current ->
+            MovieItem(movie = current, onClick)
+        }
+    }
 }
 
+@Composable
+fun MovieItem(movie: MovieDTO, onClick: (title: String) -> Unit) {
+    Column(modifier = Modifier.padding(end = 4.dp).clickable { onClick.invoke(movie.title) }) {
+        AsyncImage(model = movie.posterFullPath, contentDescription = "${movie.title} Poster Image",
+            modifier = Modifier
+                .width(120.dp)
+                .height(150.dp),
+            contentScale = ContentScale.Crop)
+    }
+}
 
