@@ -7,14 +7,21 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,7 +29,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.mycinema.ui.theme.MyCinemaTheme
 import retrofit2.Call
@@ -32,7 +42,7 @@ import retrofit2.Response
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        //enableEdgeToEdge()
         setContent {
             MyCinemaTheme {
                 println("AQUI")
@@ -71,10 +81,43 @@ class MainActivity : ComponentActivity() {
 
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     //Log.i("TESTE", apiService.getCurrentMovies().toString())
-                        CurrentMovies(nowPlayingMovies, modifier = Modifier.padding(innerPadding), onClick = {title -> Log.i("AQUI",title)})
+                    Column(modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
+                        Text(
+                            text = "My Cinema",
+                            modifier = Modifier.padding(8.dp),
+                            fontSize = 48.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Spacer(modifier = Modifier.size(8.dp))
+                        MovieSession(
+                            label = "Now Playing",
+                            nowPlayingMovies,
+                            modifier = Modifier.padding(innerPadding),
+                            onClick = { title -> Log.i("AQUI", title) })
+                        MovieSession(
+                            label = "Now Playing",
+                            nowPlayingMovies,
+                            modifier = Modifier.padding(innerPadding),
+                            onClick = { title -> Log.i("AQUI", title) })
+                    }
+
                 }
             }
         }
+    }
+}
+
+@Composable
+fun MovieSession(label: String, nowPlayingMovies: List<MovieDTO>, modifier: Modifier, onClick: (title: String) -> Unit) {
+    Column(modifier = Modifier.fillMaxWidth().padding(4.dp)) {
+        Text(
+            text = label,
+            fontSize = 24.sp,
+            fontWeight = FontWeight.SemiBold,
+            modifier = Modifier.padding(start = 4.dp)
+        )
+        Spacer(modifier = Modifier.size(8.dp))
+        CurrentMovies(nowPlayingMovies = nowPlayingMovies,modifier=modifier, onClick=onClick)
     }
 }
 
@@ -89,12 +132,33 @@ fun CurrentMovies(nowPlayingMovies: List<MovieDTO>, modifier: Modifier, onClick:
 
 @Composable
 fun MovieItem(movie: MovieDTO, onClick: (title: String) -> Unit) {
-    Column(modifier = Modifier.padding(end = 4.dp).clickable { onClick.invoke(movie.title) }) {
+    Column(modifier = Modifier.padding(end = 4.dp).width(IntrinsicSize.Min).clickable { onClick.invoke(movie.title) }) {
         AsyncImage(model = movie.posterFullPath, contentDescription = "${movie.title} Poster Image",
             modifier = Modifier
                 .width(120.dp)
                 .height(150.dp),
             contentScale = ContentScale.Crop)
+        Spacer(modifier = Modifier.size(4.dp))
+
+        Text(
+           // text = if (movie.title.length > 9) "${movie.title.slice(IntRange(0,9))}..." else movie.title,
+            text = movie.title,
+            maxLines = 1,
+            fontSize = 18.sp,
+            overflow = TextOverflow.Ellipsis,
+            fontWeight = FontWeight.SemiBold,
+        )
+        Spacer(modifier = Modifier.size(2.dp))
+
+        Text(
+            //text = "${movie.overview.slice(IntRange(0,10))}...",
+            text = movie.overview,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.width(120.dp)
+
+        )
     }
 }
+
 
