@@ -6,4 +6,13 @@ import retrofit2.http.GET
 interface ApiService {
     @GET("movie/now_playing?language=en-US&page=1")
     fun getCurrentMovies(): Call<MovieResponse>
+
+    @GET("movie/top_rated?language=en-US&page=1")
+    fun getTopRatedMovies(): Call<MovieResponse>
+
+    @GET("discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc")
+    fun getPopularMovies(): Call<MovieResponse>
+
+    @GET("discover/movie?language=en-US&page=1&sort_by=popularity.desc&with_release_type=2|3")
+    fun getUpcomingMovies() : Call<MovieResponse>
 }

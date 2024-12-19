@@ -42,13 +42,20 @@ import retrofit2.Response
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         //enableEdgeToEdge()
         setContent {
             MyCinemaTheme {
                 println("AQUI")
                 var nowPlayingMovies by remember { mutableStateOf<List<MovieDTO>>(emptyList()) }
+                var topRated by remember { mutableStateOf<List<MovieDTO>>(emptyList()) }
+                var popular by remember { mutableStateOf<List<MovieDTO>>(emptyList()) }
+                var upcoming by remember { mutableStateOf<List<MovieDTO>>(emptyList()) }
                 val apiService = RetroFitClient.retrofit.create(ApiService::class.java)
                 val callNowPlaying = apiService.getCurrentMovies()
+                val callTopRated = apiService.getTopRatedMovies()
+                val callPopular = apiService.getPopularMovies()
+                val callUpcoming = apiService.getUpcomingMovies()
                 println("AQUI 2")
                 println(nowPlayingMovies)
                 println(callNowPlaying.toString())
@@ -78,6 +85,83 @@ class MainActivity : ComponentActivity() {
 
                     }
                 })
+                //topRated = consumeMoviesAPI(callTopRated)
+
+                callTopRated.enqueue(object : Callback<MovieResponse> {
+                    override fun onResponse(
+                        call: Call<MovieResponse?>,
+                        response: Response<MovieResponse?>
+                    ) {
+                        println("AQUI 4")
+                        println(response)
+                        if (response.isSuccessful) {
+                            val movies = response.body()?.results
+                            if (movies != null) {
+                                topRated = movies
+                                println("AQUI 3")
+                            }
+                        }
+                        else {
+                            println("AQUI 5")
+                            Log.d("MainActivity", "Request Error :: ${response.errorBody()}")
+                        }
+                    }
+                    override fun onFailure(call: Call<MovieResponse?>, t: Throwable) {
+                        Log.d("MainActivity", "Network Error :: ${t.message}")
+
+                    }
+                })
+
+                callPopular.enqueue(object : Callback<MovieResponse> {
+                    override fun onResponse(
+                        call: Call<MovieResponse?>,
+                        response: Response<MovieResponse?>
+                    ) {
+                        println("AQUI 4")
+                        println(response)
+                        if (response.isSuccessful) {
+                            val movies = response.body()?.results
+                            if (movies != null) {
+                                popular = movies
+                                println("AQUI 3")
+                            }
+                        }
+                        else {
+                            println("AQUI 5")
+                            Log.d("MainActivity", "Request Error :: ${response.errorBody()}")
+                        }
+                    }
+                    override fun onFailure(call: Call<MovieResponse?>, t: Throwable) {
+                        Log.d("MainActivity", "Network Error :: ${t.message}")
+
+                    }
+                })
+
+                callUpcoming.enqueue(object : Callback<MovieResponse> {
+                    override fun onResponse(
+                        call: Call<MovieResponse?>,
+                        response: Response<MovieResponse?>
+                    ) {
+                        println("AQUI 4")
+                        println(response)
+                        if (response.isSuccessful) {
+                            val movies = response.body()?.results
+                            if (movies != null) {
+                                upcoming = movies
+                                println("AQUI 3")
+                            }
+                        }
+                        else {
+                            println("AQUI 5")
+                            Log.d("MainActivity", "Request Error :: ${response.errorBody()}")
+                        }
+                    }
+                    override fun onFailure(call: Call<MovieResponse?>, t: Throwable) {
+                        Log.d("MainActivity", "Network Error :: ${t.message}")
+
+                    }
+                })
+
 
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     //Log.i("TESTE", apiService.getCurrentMovies().toString())
@@ -95,15 +179,57 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier.padding(innerPadding),
                             onClick = { title -> Log.i("AQUI", title) })
                         MovieSession(
-                            label = "Now Playing",
-                            nowPlayingMovies,
+                            label = "Top Rated",
+                            topRated,
                             modifier = Modifier.padding(innerPadding),
                             onClick = { title -> Log.i("AQUI", title) })
+                        MovieSession(
+                            label = "Popular",
+                            popular,
+                            modifier = Modifier.padding(innerPadding),
+                            onClick = { title -> Log.i("AQUI", title) })
+                        MovieSession(
+                            label = "Upcoming",
+                            upcoming,
+                            modifier = Modifier.padding(innerPadding),
+                            onClick = { title -> Log.i("AQUI", title) })
+
+
                     }
 
                 }
             }
         }
+    }
+
+    private fun consumeMoviesAPI(call: Call<MovieResponse>): List<MovieDTO> {
+        var moviesVariable: List<MovieDTO> = emptyList()
+        call.enqueue(object : Callback<MovieResponse> {
+            override fun onResponse(
+                call: Call<MovieResponse?>,
+                response: Response<MovieResponse?>
+            ) {
+                println("AQUI 4")
+                println(response)
+                if (response.isSuccessful) {
+                    val movies = response.body()?.results
+                    if (movies != null) {
+                        moviesVariable = movies
+                        println("AQUI 3")
+                    }
+                }
+                else {
+                    println("AQUI 5")
+                    Log.d("MainActivity", "Request Error :: ${response.errorBody()}")
+                }
+            }
+
+            override fun onFailure(call: Call<MovieResponse?>, t: Throwable) {
+                Log.d("MainActivity", "Network Error :: ${t.message}")
+
+            }
+        })
+        return moviesVariable
     }
 }
 
@@ -117,14 +243,14 @@ fun MovieSession(label: String, nowPlayingMovies: List<MovieDTO>, modifier: Modi
             modifier = Modifier.padding(start = 4.dp)
         )
         Spacer(modifier = Modifier.size(8.dp))
-        CurrentMovies(nowPlayingMovies = nowPlayingMovies,modifier=modifier, onClick=onClick)
+        MoviesList(movies = nowPlayingMovies,modifier=modifier, onClick=onClick)
     }
 }
 
 @Composable
-fun CurrentMovies(nowPlayingMovies: List<MovieDTO>, modifier: Modifier, onClick: (title: String) -> Unit) {
+fun MoviesList(movies: List<MovieDTO>, modifier: Modifier, onClick: (title: String) -> Unit) {
     LazyRow(modifier = modifier.padding(8.dp)) {
-        items(nowPlayingMovies) { current ->
+        items(movies) { current ->
             MovieItem(movie = current, onClick)
         }
     }
