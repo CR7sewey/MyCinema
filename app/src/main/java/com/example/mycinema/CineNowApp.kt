@@ -2,10 +2,11 @@ package com.example.mycinema
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavHost
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 
 @Composable
 fun CineNowApp(modifier: Modifier = Modifier) {
@@ -14,8 +15,9 @@ fun CineNowApp(modifier: Modifier = Modifier) {
         composable(route = "movieList") {
             MovieListScreen(navController)
         }
-        composable(route = "movieDetail") {
-            MovieDetailsScreen()
+        composable(route = "movieDetail"+ "/{itemId}", arguments = listOf(navArgument("itemId"){ type=
+            NavType.StringType})) { backStateEntry ->
+            MovieDetailsScreen(requireNotNull(backStateEntry.arguments?.getString("itemId").toString()))
         }
     }
 }

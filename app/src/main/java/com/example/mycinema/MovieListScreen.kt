@@ -28,6 +28,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.Navigator
 import coil.compose.AsyncImage
 import retrofit2.Call
 import retrofit2.Callback
@@ -152,8 +153,9 @@ fun MovieListScreen(navController: NavHostController) {
         }
     })
 
-    MovieListContent(topRated,nowPlayingMovies,popular,upcoming, { id -> navController.navigate(route = "movieDetail")
-     })
+    MovieListContent(topRated,nowPlayingMovies,popular,upcoming) { id ->
+        navController.navigate(route = "movieDetail/${id}")
+    }
 
 }
 
@@ -214,8 +216,10 @@ private fun MoviesList(movies: List<MovieDTO>, modifier: Modifier, onClick: (tit
 }
 
 @Composable
-private fun MovieItem(movie: MovieDTO, onClick: (title: String) -> Unit) {
-    Column(modifier = Modifier.padding(end = 4.dp).width(IntrinsicSize.Min).clickable { onClick.invoke(movie.title) }) {
+private fun MovieItem(movie: MovieDTO, onClick: (id: String) -> Unit) {
+    Column(modifier = Modifier.padding(end = 4.dp).width(IntrinsicSize.Min).clickable { onClick.invoke(
+        movie.id.toString()
+    ) }) {
         AsyncImage(model = movie.posterFullPath, contentDescription = "${movie.title} Poster Image",
             modifier = Modifier
                 .width(120.dp)
