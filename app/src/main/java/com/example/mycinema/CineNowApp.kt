@@ -17,7 +17,7 @@ fun CineNowApp(modifier: Modifier = Modifier) {
         }
         composable(route = "movieDetail"+ "/{itemId}", arguments = listOf(navArgument("itemId"){ type=
             NavType.StringType})) { backStateEntry ->
-            MovieDetailsScreen(requireNotNull(backStateEntry.arguments?.getString("itemId").toString()))
+            MovieDetailsScreen(requireNotNull(backStateEntry.arguments?.getString("itemId").toString()), navController)
         }
     }
 }
