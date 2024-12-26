@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.mycinema.common.data.RetroFitClient
 import com.example.mycinema.common.model.MovieDTO
 import com.example.mycinema.detail.data.DetailService
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -55,28 +56,17 @@ class MovieDetailsViewModel(private val detailService: DetailService) : ViewMode
     }
 
     fun fetchData(itemId: String) {
-        if (_uiGetMovie.value == null) {
-            detailService.getMovie(itemId.toString()).enqueue(object : Callback<MovieDTO> {
-                override fun onResponse(
-                    call: Call<MovieDTO?>,
-                    response: Response<MovieDTO?>
-                ) {
-                    println(response)
-                    if (response.isSuccessful) {
-                        val movie = response.body()
-                        if (movie != null) {
-                            _uiGetMovie.value = movie
-                        }
-                    } else {
-                        Log.d("MovieDetailsViewModel", "Request Error :: ${response.errorBody()}")
-                    }
-                }
 
-                override fun onFailure(call: Call<MovieDTO?>, t: Throwable) {
-                    Log.d("MovieDetailsViewModel", "Network Error :: ${t.message}")
-
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = detailService.getMovie(itemId.toString())
+            if (response.isSuccessful) {
+                val movie = response.body()
+                if (movie != null) {
+                    _uiGetMovie.value = movie
                 }
-            })
+            } else {
+                Log.d("MovieDetailsViewModel", "Request Error :: ${response.errorBody()}")
+            }
         }
     }
 
