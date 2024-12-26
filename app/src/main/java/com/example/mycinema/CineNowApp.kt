@@ -7,6 +7,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.mycinema.detail.presentation.ui.MovieDetailsScreen
+import com.example.mycinema.list.presentation.ui.MovieListScreen
 
 @Composable
 fun CineNowApp(modifier: Modifier = Modifier) {
@@ -17,7 +19,11 @@ fun CineNowApp(modifier: Modifier = Modifier) {
         }
         composable(route = "movieDetail"+ "/{itemId}", arguments = listOf(navArgument("itemId"){ type=
             NavType.StringType})) { backStateEntry ->
-            MovieDetailsScreen(requireNotNull(backStateEntry.arguments?.getString("itemId").toString()), navController)
+            MovieDetailsScreen(
+                requireNotNull(
+                    backStateEntry.arguments?.getString("itemId").toString()
+                ), navController
+            )
         }
     }
 }

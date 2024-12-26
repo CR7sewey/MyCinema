@@ -1,8 +1,7 @@
-package com.example.mycinema
+package com.example.mycinema.detail.presentation.ui
 
 import android.util.Log
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -28,13 +26,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.example.mycinema.ApiService
+import com.example.mycinema.common.model.MovieDTO
+import com.example.mycinema.common.data.RetroFitClient
 import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.Response
 
 @Composable
@@ -46,7 +46,7 @@ fun MovieDetailsScreen(itemId: String, navController: NavHostController) {
     val callGetMovie = apiService.getMovie(itemId.toString());
 
 
-    callGetMovie.enqueue(object : retrofit2.Callback<MovieDTO> {
+    callGetMovie.enqueue(object : Callback<MovieDTO> {
         override fun onResponse(
             call: Call<MovieDTO?>,
             response: Response<MovieDTO?>

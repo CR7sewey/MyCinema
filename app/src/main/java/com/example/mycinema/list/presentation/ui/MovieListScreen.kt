@@ -1,4 +1,4 @@
-package com.example.mycinema
+package com.example.mycinema.list.presentation.ui
 
 import android.util.Log
 import androidx.compose.foundation.clickable
@@ -28,8 +28,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.Navigator
 import coil.compose.AsyncImage
+import com.example.mycinema.ApiService
+import com.example.mycinema.common.model.MovieDTO
+import com.example.mycinema.common.model.MovieResponse
+import com.example.mycinema.common.data.RetroFitClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

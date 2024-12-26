@@ -1,4 +1,4 @@
-package com.example.mycinema
+package com.example.mycinema.common.model
 
 //@kotlinx.serialization.InternalSerializationApi
 data class MovieResponse(

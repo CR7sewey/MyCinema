@@ -1,12 +1,10 @@
-package com.example.mycinema
+package com.example.mycinema.list.data
 
-import com.example.mycinema.common.model.MovieDTO
 import com.example.mycinema.common.model.MovieResponse
 import retrofit2.Call
 import retrofit2.http.GET
-import retrofit2.http.Path
 
-interface ApiService {
+interface ListService {
     @GET("movie/now_playing?language=en-US&page=1")
     fun getCurrentMovies(): Call<MovieResponse>
 
@@ -18,7 +16,4 @@ interface ApiService {
 
     @GET("movie/upcoming?language=en-US&page=1")
     fun getUpcomingMovies() : Call<MovieResponse>
-
-    @GET("movie/{movie_id}?language=en-US")
-    fun getMovie(@Path("movie_id") movieId: String) : Call<MovieDTO>
 }

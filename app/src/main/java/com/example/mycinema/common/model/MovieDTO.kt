@@ -1,7 +1,6 @@
-package com.example.mycinema
+package com.example.mycinema.common.model
 
 import com.google.gson.annotations.SerializedName
-import kotlinx.serialization.Serializable
 
 //DTO
 //@kotlinx.serialization.InternalSerializationApi

@@ -1,6 +1,6 @@
-package com.example.mycinema
+package com.example.mycinema.common.data
 
-import com.google.gson.internal.GsonBuildConfig
+import com.example.mycinema.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import retrofit2.Retrofit
