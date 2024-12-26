@@ -19,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,51 +34,27 @@ import coil.compose.AsyncImage
 import com.example.mycinema.ApiService
 import com.example.mycinema.common.model.MovieDTO
 import com.example.mycinema.common.data.RetroFitClient
+import com.example.mycinema.detail.presentation.MovieDetailsViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 @Composable
-fun MovieDetailsScreen(itemId: String, navController: NavHostController) {
+fun MovieDetailsScreen(itemId: String, navController: NavHostController, movieDetailVM: MovieDetailsViewModel) {
 
-    var getMovie by remember { mutableStateOf<MovieDTO?>(null) }
+    val getMovie by movieDetailVM.uiGetMovie.collectAsState()
+    movieDetailVM.fetchData(itemId)
 
-    val apiService = RetroFitClient.retrofit.create(ApiService::class.java)
-    val callGetMovie = apiService.getMovie(itemId.toString());
-
-
-    callGetMovie.enqueue(object : Callback<MovieDTO> {
-        override fun onResponse(
-            call: Call<MovieDTO?>,
-            response: Response<MovieDTO?>
-        ) {
-            println(response)
-            if (response.isSuccessful) {
-                val movie = response.body()
-                if (movie != null) {
-                    getMovie = movie
-                }
-            }
-            else {
-                Log.d("MainActivity", "Request Error :: ${response.errorBody()}")
-            }
-        }
-
-        override fun onFailure(call: Call<MovieDTO?>, t: Throwable) {
-            Log.d("MainActivity", "Network Error :: ${t.message}")
-
-        }
-    })
 
     getMovie?.let {
-        MovieDetailsContent(it, navController)
+        MovieDetailsContent(it, navController, movieDetailVM)
     }
 
 
 }
 
 @Composable
-private fun MovieDetailsContent(movie: MovieDTO?, navController: NavHostController) {
+private fun MovieDetailsContent(movie: MovieDTO?, navController: NavHostController, movieDetailVM: MovieDetailsViewModel) {
     Column(modifier = Modifier.fillMaxSize().padding(8.dp).verticalScroll(rememberScrollState())) {
        /* LazyRow {
             items(listOf(movie)) {
@@ -88,6 +65,7 @@ private fun MovieDetailsContent(movie: MovieDTO?, navController: NavHostControll
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = {
+                movieDetailVM.cleanMovieId()
                 navController.popBackStack()
             }) {
                 Icon(
