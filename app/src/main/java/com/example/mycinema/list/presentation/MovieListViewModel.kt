@@ -11,6 +11,7 @@ import com.example.mycinema.common.data.RetroFitClient
 import com.example.mycinema.common.model.MovieDTO
 import com.example.mycinema.common.model.MovieResponse
 import com.example.mycinema.list.data.ListService
+import com.example.mycinema.list.data.MovieListRepository
 import com.example.mycinema.list.presentation.ui.MovieListUiState
 import com.example.mycinema.list.presentation.ui.MovieUiData
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +25,7 @@ import retrofit2.Response
 import java.net.UnknownHostException
 
 
-class MovieListViewModel(private val listService: ListService) : ViewModel() {
+class MovieListViewModel(private val repository: MovieListRepository) : ViewModel() {
 
     private val _uiNowPlayingMovies = MutableStateFlow<MovieListUiState>(MovieListUiState())
     val uiNowPlayingMovies: StateFlow<MovieListUiState> = _uiNowPlayingMovies
@@ -55,9 +56,10 @@ class MovieListViewModel(private val listService: ListService) : ViewModel() {
             override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
                 // Get the Application object from extras
                 val application = RetroFitClient.retrofit.create(ListService::class.java)
+                val repository = MovieListRepository(application)
                 // Create a SavedStateHandle for this ViewModel from extras
                 //val savedStateHandle = extras.createSavedStateHandle()
-                return MovieListViewModel(application as ListService) as T
+                return MovieListViewModel(repository) as T
             }
 
         }
@@ -66,39 +68,58 @@ class MovieListViewModel(private val listService: ListService) : ViewModel() {
     private fun fetchData(option: String) {
 
         viewModelScope.launch(Dispatchers.IO) { // Suspend configuration != callback one
-            when {
-                option.equals("_uiNowPlayingMovies") -> _uiNowPlayingMovies.value =
-                    MovieListUiState(isLoading = true)
-                option.equals("_uiTopRated") -> _uiTopRated.value = MovieListUiState(isLoading = true)
-                option.equals("_uiPopular") -> _uiPopular.value = MovieListUiState(isLoading = true)
-                option.equals("_uiUpcoming") -> _uiUpcoming.value = MovieListUiState(isLoading = true)
-            }
+            var response: Result<MovieResponse?> = repository.getNowPlaying()
+            when (option) {
+                "_uiNowPlayingMovies" -> {
+                    _uiNowPlayingMovies.value =
+                        MovieListUiState(isLoading = true)
+                    response = repository.getNowPlaying()
+                }
+                "_uiTopRated" -> {
+                    _uiTopRated.value = MovieListUiState(isLoading = true)
+                    response = repository.getTopRated()
 
-            try {
-                val response = listService.getCurrentMovies()
-                if (response.isSuccessful) {
-                    val movies = response.body()?.results
+                }
+                "_uiPopular" -> {
+                    _uiPopular.value = MovieListUiState(isLoading = true)
+                    response = repository.getPopularMovies()
+
+                }
+                "_uiUpcoming" -> {
+                    _uiUpcoming.value = MovieListUiState(isLoading = true)
+                    response = repository.getTopRated()
+                }
+            }
+            //try {
+
+                if (response.isSuccess) {
+                    val movies = response.getOrNull()?.results
                     if (movies != null) {
                         val moviesConverted = movies.map { movieDto -> MovieUiData(id = movieDto.id, title = movieDto.title, overview = movieDto.overview, image = movieDto.posterFullPath) }
                         when {
-                            option.equals("_uiNowPlayingMovies") -> _uiNowPlayingMovies.value = MovieListUiState(list = moviesConverted, isLoading = false)
-                            option.equals("_uiTopRated") -> _uiTopRated.value = MovieListUiState(list = moviesConverted, isLoading = false)
-                            option.equals("_uiPopular") -> _uiPopular.value = MovieListUiState(list = moviesConverted, isLoading = false)
-                            option.equals("_uiUpcoming") -> _uiUpcoming.value = MovieListUiState(list = moviesConverted, isLoading = false)
+                            option == "_uiNowPlayingMovies" -> _uiNowPlayingMovies.value = MovieListUiState(list = moviesConverted, isLoading = false)
+                            option == "_uiTopRated" -> _uiTopRated.value = MovieListUiState(list = moviesConverted, isLoading = false)
+                            option == "_uiPopular" -> _uiPopular.value = MovieListUiState(list = moviesConverted, isLoading = false)
+                            option == "_uiUpcoming" -> _uiUpcoming.value = MovieListUiState(list = moviesConverted, isLoading = false)
                         }
                     }
                 } else {
-                    Log.d("MovieListViewModel", "Request Error :: ${response.errorBody()}")
+                    val ex = response.exceptionOrNull()
+                    var errorMessage = "Something went wrong..."
+                    if (ex is UnknownHostException) {
+                        errorMessage = "No internet connection..."//ex.message.toString()
+                    }
+                    Log.d("MovieListViewModel", "Request Error :: ${response.exceptionOrNull()?.message.toString()}")
                     when {
-                        option.equals("_uiNowPlayingMovies") -> _uiNowPlayingMovies.value = MovieListUiState(isLoading = false, isError = true, errorMessage = response.message())
-                        option.equals("_uiTopRated") -> _uiTopRated.value = MovieListUiState(isLoading = false, isError = true)
-                        option.equals("_uiPopular") -> _uiPopular.value = MovieListUiState(isLoading = false, isError = true)
-                        option.equals("_uiUpcoming") -> _uiUpcoming.value = MovieListUiState(isLoading = false, isError = true)
+                        option == "_uiNowPlayingMovies" -> _uiNowPlayingMovies.value = MovieListUiState(isLoading = false, isError = true, errorMessage = errorMessage)
+                        option == "_uiTopRated" -> _uiTopRated.value = MovieListUiState(isLoading = false, isError = true, errorMessage = errorMessage)
+                        option == "_uiPopular" -> _uiPopular.value = MovieListUiState(isLoading = false, isError = true, errorMessage = errorMessage)
+                        option == "_uiUpcoming" -> _uiUpcoming.value = MovieListUiState(isLoading = false, isError = true, errorMessage = errorMessage)
 
                     }
                 }
-            }
-            catch (ex: Exception) { // no internet connection
+            //}
+            /*catch (ex: Exception) { // no internet connection
                 ex.printStackTrace()
                 var errorMessage = "Something went wrong..."
                 if (ex is UnknownHostException) {
@@ -112,7 +133,7 @@ class MovieListViewModel(private val listService: ListService) : ViewModel() {
 
                 }
                 _uiErrorFetching.value = true
-            }
+            }*/
         }
 
     }
