@@ -1,13 +1,12 @@
 package com.example.mycinema.list.data
 
 import android.accounts.NetworkErrorException
-import android.util.Log
 import com.example.mycinema.common.model.MovieResponse
-import com.example.mycinema.list.presentation.ui.MovieListUiState
-import com.example.mycinema.list.presentation.ui.MovieUiData
-import java.net.UnknownHostException
+import com.example.mycinema.list.data.local.MovieListLocalDataSource
+import com.example.mycinema.list.data.remote.ListService
+import com.example.mycinema.list.data.remote.MovieListRemoteDataSource
 
-class MovieListRepository(private val listService: ListService) {
+class MovieListRepository(private val movieListRemoteDataSource: MovieListRemoteDataSource, movieListLocalDataSource: MovieListLocalDataSource) {
 
     suspend fun getNowPlaying(): Result<MovieResponse?> {
 

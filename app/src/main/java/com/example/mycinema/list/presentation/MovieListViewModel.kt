@@ -2,15 +2,15 @@ package com.example.mycinema.list.presentation
 
 
 import android.util.Log
-import androidx.compose.material3.Snackbar
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.example.mycinema.MyCinemaApplication
 import com.example.mycinema.common.data.RetroFitClient
-import com.example.mycinema.common.model.MovieDTO
 import com.example.mycinema.common.model.MovieResponse
-import com.example.mycinema.list.data.ListService
+import com.example.mycinema.list.data.remote.ListService
 import com.example.mycinema.list.data.MovieListRepository
 import com.example.mycinema.list.presentation.ui.MovieListUiState
 import com.example.mycinema.list.presentation.ui.MovieUiData
@@ -18,10 +18,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import okhttp3.Dispatcher
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.net.UnknownHostException
 
 
@@ -55,8 +51,8 @@ class MovieListViewModel(private val repository: MovieListRepository) : ViewMode
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
                 // Get the Application object from extras
-                val application = RetroFitClient.retrofit.create(ListService::class.java)
-                val repository = MovieListRepository(application)
+                val application: MyCinemaApplication = checkNotNull(extras[APPLICATION_KEY]) as MyCinemaApplication
+                val repository = application.repository
                 // Create a SavedStateHandle for this ViewModel from extras
                 //val savedStateHandle = extras.createSavedStateHandle()
                 return MovieListViewModel(repository) as T
@@ -87,7 +83,7 @@ class MovieListViewModel(private val repository: MovieListRepository) : ViewMode
                 }
                 "_uiUpcoming" -> {
                     _uiUpcoming.value = MovieListUiState(isLoading = true)
-                    response = repository.getTopRated()
+                    response = repository.getUpcomingMovies()
                 }
             }
             //try {
