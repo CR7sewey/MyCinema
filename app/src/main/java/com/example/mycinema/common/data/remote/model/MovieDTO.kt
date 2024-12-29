@@ -1,4 +1,4 @@
-package com.example.mycinema.common.model
+package com.example.mycinema.common.data.remote.model
 
 import com.google.gson.annotations.SerializedName
 

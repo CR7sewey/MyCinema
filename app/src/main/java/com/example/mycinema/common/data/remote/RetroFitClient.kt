@@ -1,4 +1,4 @@
-package com.example.mycinema.common.data
+package com.example.mycinema.common.data.remote
 
 import com.example.mycinema.BuildConfig
 import okhttp3.OkHttpClient

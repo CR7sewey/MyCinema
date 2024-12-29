@@ -2,8 +2,7 @@ package com.example.mycinema
 
 import android.app.Application
 import androidx.room.Room
-import com.example.mycinema.common.data.RetroFitClient
-import com.example.mycinema.common.data.local.MovieEntity
+import com.example.mycinema.common.data.remote.RetroFitClient
 import com.example.mycinema.common.data.local.MyCinemaDatabase
 import com.example.mycinema.list.data.MovieListRepository
 import com.example.mycinema.list.data.local.MovieListLocalDataSource

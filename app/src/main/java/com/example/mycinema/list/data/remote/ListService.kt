@@ -1,6 +1,6 @@
 package com.example.mycinema.list.data.remote
 
-import com.example.mycinema.common.model.MovieResponse
+import com.example.mycinema.common.data.remote.model.MovieResponse
 import retrofit2.Response
 import retrofit2.http.GET
 

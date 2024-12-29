@@ -1,7 +1,6 @@
 package com.example.mycinema.detail.data
 
-import com.example.mycinema.common.model.MovieDTO
-import retrofit2.Call
+import com.example.mycinema.common.data.remote.model.MovieDTO
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

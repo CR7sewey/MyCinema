@@ -8,9 +8,8 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.mycinema.MyCinemaApplication
-import com.example.mycinema.common.data.RetroFitClient
-import com.example.mycinema.common.model.MovieResponse
-import com.example.mycinema.list.data.remote.ListService
+import com.example.mycinema.common.data.model.Movie
+import com.example.mycinema.common.data.remote.model.MovieResponse
 import com.example.mycinema.list.data.MovieListRepository
 import com.example.mycinema.list.presentation.ui.MovieListUiState
 import com.example.mycinema.list.presentation.ui.MovieUiData
@@ -64,7 +63,7 @@ class MovieListViewModel(private val repository: MovieListRepository) : ViewMode
     private fun fetchData(option: String) {
 
         viewModelScope.launch(Dispatchers.IO) { // Suspend configuration != callback one
-            var response: Result<MovieResponse?> = repository.getNowPlaying()
+            var response: Result<List<Movie>> = repository.getNowPlaying()
             when (option) {
                 "_uiNowPlayingMovies" -> {
                     _uiNowPlayingMovies.value =
@@ -89,9 +88,9 @@ class MovieListViewModel(private val repository: MovieListRepository) : ViewMode
             //try {
 
                 if (response.isSuccess) {
-                    val movies = response.getOrNull()?.results
+                    val movies = response.getOrNull()
                     if (movies != null) {
-                        val moviesConverted = movies.map { movieDto -> MovieUiData(id = movieDto.id, title = movieDto.title, overview = movieDto.overview, image = movieDto.posterFullPath) }
+                        val moviesConverted = movies.map { movieDto -> MovieUiData(id = movieDto.id, title = movieDto.title, overview = movieDto.overview, image = movieDto.image) }
                         when {
                             option == "_uiNowPlayingMovies" -> _uiNowPlayingMovies.value = MovieListUiState(list = moviesConverted, isLoading = false)
                             option == "_uiTopRated" -> _uiTopRated.value = MovieListUiState(list = moviesConverted, isLoading = false)
