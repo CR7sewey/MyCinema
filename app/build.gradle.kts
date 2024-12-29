@@ -5,6 +5,8 @@ plugins {
     id("org.jetbrains.kotlin.android")
     alias(libs.plugins.compose.compiler)
     kotlin("plugin.serialization") version "2.0.0"
+    id("org.jetbrains.kotlin.kapt")
+
 }
 
 android {
@@ -70,6 +72,14 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.2")
+
+    //Room database
+    val room_version = "2.6.1"
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    kapt("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
+    implementation("androidx.room:room-guava:$room_version")
 
 
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
