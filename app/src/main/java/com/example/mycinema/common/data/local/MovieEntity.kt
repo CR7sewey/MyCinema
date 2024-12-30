@@ -4,9 +4,9 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(primaryKeys = ["id","category"])
 data class MovieEntity(
-    @PrimaryKey
+    //@PrimaryKey
     val id: Int = 0,
     @ColumnInfo(name= "title") val title: String,
     @ColumnInfo(name= "overview") val overview: String,

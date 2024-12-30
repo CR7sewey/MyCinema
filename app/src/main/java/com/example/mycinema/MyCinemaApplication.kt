@@ -14,7 +14,7 @@ class MyCinemaApplication : Application() {
     private val db by lazy {
         Room.databaseBuilder(
             applicationContext,
-            MyCinemaDatabase::class.java, "mycinema-database"
+            MyCinemaDatabase::class.java, "cinema-database"
         ).build()
     }
 
