@@ -16,9 +16,14 @@ class MovieListLocalDataSource(private val movieDao: MovieDao) {
 
     fun insertOne(vararg moviesList: MovieEntity) {}
 
-    fun update(movieEntity: MovieEntity) {}
+    fun updateByCategoryName(moviesList: List<Movie>, categoryName: String) {
+        deleteByCategoryName(categoryName)
+        insertAll(moviesList, categoryName)
+    }
 
-    fun delete(movieEntity: MovieEntity) {}
+    fun deleteByCategoryName(categoryName: String) {
+        movieDao.deleteByCategoryName(categoryName)
+    }
 
     fun getAllByCategoryName(categoryName: String): List<Movie> {
         val movies = movieDao.getAllByCategoryName(MovieCategory.valueOf(categoryName).toString())

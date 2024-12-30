@@ -22,6 +22,9 @@ interface MovieDao {
     @Delete
     fun delete(movieEntity: MovieEntity)
 
+    @Query("delete from movieentity where category is :categoryName")
+    fun deleteByCategoryName(categoryName: String)
+
     @Query("Select * From movieentity where category is :categoryName")
     fun getAllByCategoryName(categoryName: String): List<MovieEntity>
 

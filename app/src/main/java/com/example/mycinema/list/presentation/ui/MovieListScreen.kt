@@ -99,6 +99,12 @@ fun MovieSessionOrLoadingOrError(label: String, movies: MovieListUiState, onClic
             LoadingMovieListScreen(label = label)
         }
         else if (movies.isError) {
+            MovieSession(
+                label = label,
+                movies,
+                modifier = Modifier.padding(8.dp),
+                onClick = onClick
+            )
             Toast.makeText(context, movies.errorMessage, Toast.LENGTH_LONG).show()
         }
     }
