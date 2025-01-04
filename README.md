@@ -10,6 +10,7 @@ Funcionalidades
 ### Com internet
 <img src="https://github.com/user-attachments/assets/3677ccf5-869a-493a-a898-3aac33e9d789" width=170/> 
 <img src="https://github.com/user-attachments/assets/d4e9701b-25ea-4473-851f-fd34a309a0b6" width=170/> 
+
 ### Sem internet
 <img src="https://github.com/user-attachments/assets/3677ccf5-869a-493a-a898-3aac33e9d789" width=170/> 
 <img src="https://github.com/user-attachments/assets/b7f9eb00-d6bb-4d5c-b6e5-14fa8854a825" width=170/> 
