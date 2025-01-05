@@ -1,5 +1,6 @@
 package com.example.mycinema.list.data.local
 
+import android.util.Log
 import com.example.mycinema.common.data.local.MovieCategory
 import com.example.mycinema.common.data.local.MovieDao
 import com.example.mycinema.common.data.local.MovieEntity
@@ -12,17 +13,20 @@ class MovieListLocalDataSource(private val movieDao: MovieDao) {
         val movieEntity = moviesList.map { movie -> MovieEntity(movie.id, movie.title, movie.overview, movie.image,
             MovieCategory.valueOf(categoryName).name) }
         movieDao.insertAll(movieEntity)
+        //Log.d("TESTE",movieDao.getAllByCategoryName(categoryName).toString())
     }
 
     fun insertOne(vararg moviesList: MovieEntity) {}
 
     fun updateByCategoryName(moviesList: List<Movie>, categoryName: String) {
         deleteByCategoryName(categoryName)
-        insertAll(moviesList, categoryName)
+       insertAll(moviesList, categoryName)
     }
 
     fun deleteByCategoryName(categoryName: String) {
         movieDao.deleteByCategoryName(categoryName)
+        //movieDao.getAllByCategoryName(categoryName)
+        //Log.d("TESTE 1",movieDao.getAllByCategoryName(categoryName).toString())
     }
 
     fun getAllByCategoryName(categoryName: String): List<Movie> {
