@@ -13,6 +13,7 @@ import com.example.mycinema.common.data.remote.model.MovieResponse
 import com.example.mycinema.list.data.MovieListRepository
 import com.example.mycinema.list.presentation.ui.MovieListUiState
 import com.example.mycinema.list.presentation.ui.MovieUiData
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +21,7 @@ import kotlinx.coroutines.launch
 import java.net.UnknownHostException
 
 
-class MovieListViewModel(private val repository: MovieListRepository) : ViewModel() {
+class MovieListViewModel(private val repository: MovieListRepository, private val dispatcher: CoroutineDispatcher = Dispatchers.IO) : ViewModel() {
 
     private val _uiNowPlayingMovies = MutableStateFlow<MovieListUiState>(MovieListUiState())
     val uiNowPlayingMovies: StateFlow<MovieListUiState> = _uiNowPlayingMovies
@@ -62,7 +63,7 @@ class MovieListViewModel(private val repository: MovieListRepository) : ViewMode
 
     private fun fetchData(option: String) {
 
-        viewModelScope.launch(Dispatchers.IO) { // Suspend configuration != callback one
+        viewModelScope.launch(dispatcher) { // Suspend configuration != callback one
             var response: Result<List<Movie>> = repository.getNowPlaying()
             when (option) {
                 "_uiNowPlayingMovies" -> {
