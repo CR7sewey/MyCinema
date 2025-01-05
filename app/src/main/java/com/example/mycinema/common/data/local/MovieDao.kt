@@ -11,22 +11,22 @@ import androidx.room.Update
 interface MovieDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(moviesList: List<MovieEntity>)
+    suspend fun insertAll(moviesList: List<MovieEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertOne(vararg moviesList: MovieEntity)
+    suspend fun insertOne(vararg moviesList: MovieEntity)
 
     @Update
-    fun update(movieEntity: MovieEntity)
+    suspend fun update(movieEntity: MovieEntity)
 
     @Delete
-    fun delete(movieEntity: MovieEntity)
+    suspend fun delete(movieEntity: MovieEntity)
 
     @Query("delete from movieentity where category is :categoryName")
-    fun deleteByCategoryName(categoryName: String)
+    suspend fun deleteByCategoryName(categoryName: String)
 
     @Query("Select * From movieentity where category is :categoryName")
-    fun getAllByCategoryName(categoryName: String): List<MovieEntity>
+    suspend fun getAllByCategoryName(categoryName: String): List<MovieEntity>
 
 
 }

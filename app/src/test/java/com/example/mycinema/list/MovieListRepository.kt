@@ -1,31 +1,25 @@
 package com.example.mycinema.list
 
 import android.accounts.NetworkErrorException
-import android.net.ipsec.ike.exceptions.InvalidKeException
-import app.cash.turbine.test
 import com.example.mycinema.common.data.local.MovieCategory
 import com.example.mycinema.common.data.model.Movie
+import com.example.mycinema.list.data.local.LocalDataSource
 import com.example.mycinema.list.data.MovieListRepository
 import com.example.mycinema.list.data.local.MovieListLocalDataSource
 import com.example.mycinema.list.data.remote.MovieListRemoteDataSource
-import com.example.mycinema.list.presentation.ui.MovieListUiState
-import com.example.mycinema.list.presentation.ui.MovieUiData
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import java.net.UnknownHostException
-import java.security.InvalidKeyException
 
 class MovieListRepository {
 
-    private val mockLocalDataSource: MovieListLocalDataSource = mock()
+    private val fakeLocalDataSource = FakeMovieListLocalDataSource()
     private val mockRemoteDataSource: MovieListRemoteDataSource = mock()
 
     private val underTest by lazy {
-        MovieListRepository(mockRemoteDataSource, mockLocalDataSource)
+        MovieListRepository(mockRemoteDataSource, fakeLocalDataSource)
     }
 
     /**
@@ -48,7 +42,8 @@ class MovieListRepository {
 
             whenever(mockRemoteDataSource.getCurrentMovies()).thenReturn(Result.failure(
                 NetworkErrorException()))
-            whenever(mockLocalDataSource.getAllByCategoryName(MovieCategory.NOW_PLAYING.name)).thenReturn(moviesAPI)
+            fakeLocalDataSource.movies = moviesAPI
+            //whenever(fakeLocalDataSource.getAllByCategoryName(MovieCategory.NOW_PLAYING.name)).thenReturn(moviesAPI)
 
             // when
             val result = underTest.getNowPlaying()
@@ -69,7 +64,8 @@ class MovieListRepository {
             )
             val error = Result.failure<List<Movie>>(NetworkErrorException())
             whenever(mockRemoteDataSource.getCurrentMovies()).thenReturn(error)
-            whenever(mockLocalDataSource.getAllByCategoryName(MovieCategory.NOW_PLAYING.name)).thenReturn(emptyList<Movie>())
+            fakeLocalDataSource.movies = emptyList<Movie>()
+            //whenever(fakeLocalDataSource.getAllByCategoryName(MovieCategory.NOW_PLAYING.name)).thenReturn(emptyList<Movie>())
 
             // when
             val result = underTest.getNowPlaying()
@@ -89,7 +85,8 @@ class MovieListRepository {
             )
 
             whenever(mockRemoteDataSource.getCurrentMovies()).thenReturn(Result.success(moviesAPI))
-            whenever(mockLocalDataSource.getAllByCategoryName(MovieCategory.NOW_PLAYING.name)).thenReturn(moviesAPI)
+            fakeLocalDataSource.movies = moviesAPI
+            //whenever(fakeLocalDataSource.getAllByCategoryName(MovieCategory.NOW_PLAYING.name)).thenReturn(moviesAPI)
 
             // when
             val result = underTest.getNowPlaying()
@@ -113,7 +110,7 @@ class MovieListRepository {
             )
 
             whenever(mockRemoteDataSource.getCurrentMovies()).thenReturn(Result.success(moviesAPI))
-            whenever(mockLocalDataSource.getAllByCategoryName(MovieCategory.NOW_PLAYING.name)).thenReturn(moviesLocal)
+            whenever(fakeLocalDataSource.getAllByCategoryName(MovieCategory.NOW_PLAYING.name)).thenReturn(moviesLocal)
 
             // when
             val result = underTest.getNowPlaying()

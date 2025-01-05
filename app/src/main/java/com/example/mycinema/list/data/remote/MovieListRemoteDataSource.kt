@@ -3,12 +3,10 @@ package com.example.mycinema.list.data.remote
 import android.accounts.NetworkErrorException
 import com.example.mycinema.common.data.local.MovieCategory
 import com.example.mycinema.common.data.model.Movie
-import com.example.mycinema.common.data.remote.model.MovieResponse
-import retrofit2.Response
 
-class MovieListRemoteDataSource(private val listService: ListService) {
+class MovieListRemoteDataSource(private val listService: ListService) : RemoteDataSource {
 
-    suspend fun getCurrentMovies(): Result<List<Movie>?> {
+    override suspend fun getCurrentMovies(): Result<List<Movie>?> {
         return try {
             var movieConversion: List<Movie>? = emptyList<Movie>()
             val response = listService.getCurrentMovies()
@@ -27,7 +25,7 @@ class MovieListRemoteDataSource(private val listService: ListService) {
         }
     }
 
-    suspend fun getPopularMovies(): Result<List<Movie>?> {
+    override suspend fun getPopularMovies(): Result<List<Movie>?> {
         return try {
             var movieConversion: List<Movie>? = emptyList<Movie>()
 
@@ -47,7 +45,7 @@ class MovieListRemoteDataSource(private val listService: ListService) {
         }
     }
 
-    suspend fun getUpcomingMovies(): Result<List<Movie>?> {
+    override suspend fun getUpcomingMovies(): Result<List<Movie>?> {
         return try {
             var movieConversion: List<Movie>? = emptyList<Movie>()
 
@@ -67,7 +65,7 @@ class MovieListRemoteDataSource(private val listService: ListService) {
         }
     }
 
-    suspend fun getTopRatedMovies(): Result<List<Movie>?> {
+    override suspend fun getTopRatedMovies(): Result<List<Movie>?> {
         return try {
             var movieConversion: List<Movie>? = emptyList<Movie>()
 

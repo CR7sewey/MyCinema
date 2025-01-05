@@ -6,10 +6,11 @@ import com.example.mycinema.common.data.local.MovieCategory
 import com.example.mycinema.common.data.model.Movie
 import com.example.mycinema.common.data.remote.model.MovieDTO
 import com.example.mycinema.common.data.remote.model.MovieResponse
+import com.example.mycinema.list.data.local.LocalDataSource
 import com.example.mycinema.list.data.local.MovieListLocalDataSource
 import com.example.mycinema.list.data.remote.MovieListRemoteDataSource
 
-class MovieListRepository(private val movieListRemoteDataSource: MovieListRemoteDataSource, private val movieListLocalDataSource: MovieListLocalDataSource) {
+class MovieListRepository(private val movieListRemoteDataSource: MovieListRemoteDataSource, private val movieListLocalDataSource: LocalDataSource) {
 //https://developer.android.com/topic/architecture/data-layer?hl=pt-br
     suspend fun getNowPlaying(): Result<List<Movie>> {
         //var movieConversion = movieListLocalDataSource.getAllByCategoryName(MovieCategory.NOW_PLAYING.toString()).map { mov -> Movie(mov.id, mov.title, mov.overview, mov.image, MovieCategory.NOW_PLAYING.toString()) }
