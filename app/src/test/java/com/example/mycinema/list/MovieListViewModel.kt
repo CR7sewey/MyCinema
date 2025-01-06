@@ -1,5 +1,6 @@
 package com.example.mycinema.list
 
+import android.accounts.NetworkErrorException
 import app.cash.turbine.test
 import com.example.mycinema.common.data.local.MovieCategory
 import com.example.mycinema.common.data.model.Movie
@@ -26,9 +27,14 @@ class MovieListViewModel {
     private val mockRepository: MovieListRepository = mock()
     @OptIn(ExperimentalCoroutinesApi::class)
     private val testDispatcher = UnconfinedTestDispatcher(TestCoroutineScheduler())
+    private val mockRepository2 = FakeMovieListRepository()
 
     private val underTest by lazy {
         MovieListViewModel(mockRepository, testDispatcher)
+    }
+
+    private val underTest2 by lazy {
+        MovieListViewModel(mockRepository2, testDispatcher)
     }
 
     @Test
@@ -132,6 +138,27 @@ class MovieListViewModel {
                 assertEquals(expected,awaitItem())
             }
 
+        }
+    }
+
+    @Test
+    fun `Given fresh viewModel and no internet connection and no local data When collecting to _ Then assert expected value`() {
+        runTest {
+            // Given
+            // duble
+            val movies = listOf<Movie>(
+                Movie(id = 1, title = "Mock Title", overview = "Mock overview", image = "image1", category = MovieCategory.TOP_RATED.name)
+            )
+            //whenever(mockRepository.getTopRated()).thenReturn(Result.failure(NetworkErrorException("No internet connection...")))
+            val error = Result.failure<List<Movie>>(NetworkErrorException("No internet connection..."))
+            mockRepository2.movies = error
+
+            // when
+            underTest2.uiTopRated.test {
+                // Then
+                val expected = MovieListUiState(isLoading = false, errorMessage = "No internet connection...", isError = true)
+                assertEquals(expected, mockRepository2.movies)
+            }
         }
     }
 

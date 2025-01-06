@@ -10,9 +10,9 @@ import com.example.mycinema.list.data.local.LocalDataSource
 import com.example.mycinema.list.data.local.MovieListLocalDataSource
 import com.example.mycinema.list.data.remote.MovieListRemoteDataSource
 
-class MovieListRepository(private val movieListRemoteDataSource: MovieListRemoteDataSource, private val movieListLocalDataSource: LocalDataSource) {
+class MovieListRepository(private val movieListRemoteDataSource: MovieListRemoteDataSource, private val movieListLocalDataSource: LocalDataSource) : ListRepository {
 //https://developer.android.com/topic/architecture/data-layer?hl=pt-br
-    suspend fun getNowPlaying(): Result<List<Movie>> {
+    override suspend fun getNowPlaying(): Result<List<Movie>> {
         //var movieConversion = movieListLocalDataSource.getAllByCategoryName(MovieCategory.NOW_PLAYING.toString()).map { mov -> Movie(mov.id, mov.title, mov.overview, mov.image, MovieCategory.NOW_PLAYING.toString()) }
 
         return try {
@@ -57,7 +57,7 @@ class MovieListRepository(private val movieListRemoteDataSource: MovieListRemote
         }
     }
 
-    suspend fun getTopRated(): Result<List<Movie>> {
+    override suspend fun getTopRated(): Result<List<Movie>> {
 
         return try {
             val response = movieListRemoteDataSource.getTopRatedMovies()
@@ -99,7 +99,7 @@ class MovieListRepository(private val movieListRemoteDataSource: MovieListRemote
 
     }
 
-    suspend fun getPopularMovies(): Result<List<Movie>> {
+    override suspend fun getPopularMovies(): Result<List<Movie>> {
 
         return try {
             val response = movieListRemoteDataSource.getPopularMovies()
@@ -141,7 +141,7 @@ class MovieListRepository(private val movieListRemoteDataSource: MovieListRemote
 
     }
 
-    suspend fun getUpcomingMovies(): Result<List<Movie>> {
+    override suspend fun getUpcomingMovies(): Result<List<Movie>> {
 
         return try {
             val response = movieListRemoteDataSource.getUpcomingMovies()

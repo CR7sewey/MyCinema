@@ -1,6 +1,7 @@
 package com.example.mycinema.list.presentation
 
 
+import android.accounts.NetworkErrorException
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -10,6 +11,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.mycinema.MyCinemaApplication
 import com.example.mycinema.common.data.model.Movie
 import com.example.mycinema.common.data.remote.model.MovieResponse
+import com.example.mycinema.list.data.ListRepository
 import com.example.mycinema.list.data.MovieListRepository
 import com.example.mycinema.list.presentation.ui.MovieListUiState
 import com.example.mycinema.list.presentation.ui.MovieUiData
@@ -21,7 +23,7 @@ import kotlinx.coroutines.launch
 import java.net.UnknownHostException
 
 
-class MovieListViewModel(private val repository: MovieListRepository, private val dispatcher: CoroutineDispatcher = Dispatchers.IO) : ViewModel() {
+class MovieListViewModel(private val repository: ListRepository, private val dispatcher: CoroutineDispatcher = Dispatchers.IO) : ViewModel() {
 
     private val _uiNowPlayingMovies = MutableStateFlow<MovieListUiState>(MovieListUiState())
     val uiNowPlayingMovies: StateFlow<MovieListUiState> = _uiNowPlayingMovies
@@ -102,7 +104,7 @@ class MovieListViewModel(private val repository: MovieListRepository, private va
                 } else {
                     val ex = response.exceptionOrNull()
                     var errorMessage = "Something went wrong..."
-                    if (ex is UnknownHostException) {
+                    if (ex is NetworkErrorException) {
                         errorMessage = "No internet connection..."//ex.message.toString()
                     }
                     Log.d("MovieListViewModel", "Request Error :: ${response.exceptionOrNull()?.message.toString()}")
