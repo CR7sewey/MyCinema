@@ -85,7 +85,7 @@ dependencies {
     // hilt
     implementation("com.google.dagger:hilt-android:2-48")
     kapt("com.google.dagger:hilt-android-compiler:2.48")
-    implementation("androidx.lifecycçe:lifecycle-viewmodel-compose:2.8.3")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.3")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.0")

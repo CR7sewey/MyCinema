@@ -11,7 +11,7 @@ import com.example.mycinema.list.data.remote.MovieListRemoteDataSource
 
 class MyCinemaApplication : Application() {
 
-    private val db by lazy {
+    /*private val db by lazy {
         Room.databaseBuilder(
             applicationContext,
             MyCinemaDatabase::class.java, "cinema-database"
@@ -31,6 +31,10 @@ class MyCinemaApplication : Application() {
 
     val repository: MovieListRepository by lazy {
        MovieListRepository(movieListRemoteDataSource= remoteDataSource, movieListLocalDataSource = localDataSource)
+    }*/
+
+    val repository: MovieListRepository by lazy {
+        MyCinemaServiceLocator.getRepository(application = this)
     }
 
 
