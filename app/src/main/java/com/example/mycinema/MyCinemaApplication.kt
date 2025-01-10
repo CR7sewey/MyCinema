@@ -8,7 +8,9 @@ import com.example.mycinema.list.data.MovieListRepository
 import com.example.mycinema.list.data.local.MovieListLocalDataSource
 import com.example.mycinema.list.data.remote.ListService
 import com.example.mycinema.list.data.remote.MovieListRemoteDataSource
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 class MyCinemaApplication : Application() {
 
     /*private val db by lazy {
@@ -33,9 +35,9 @@ class MyCinemaApplication : Application() {
        MovieListRepository(movieListRemoteDataSource= remoteDataSource, movieListLocalDataSource = localDataSource)
     }*/
 
-    val repository: MovieListRepository by lazy {
+   /* val repository: MovieListRepository by lazy {
         MyCinemaServiceLocator.getRepository(application = this)
-    }
+    }*/
 
 
 

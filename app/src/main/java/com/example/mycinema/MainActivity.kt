@@ -13,7 +13,7 @@ import com.example.mycinema.list.presentation.MovieListViewModel
 import com.example.mycinema.ui.theme.MyCinemaTheme
 
 class MainActivity : ComponentActivity() {
-    private val listViewModel by viewModels<MovieListViewModel> {MovieListViewModel.Factory}
+    private val listViewModel by viewModels<MovieListViewModel>() // {MovieListViewModel.Factory}
     private val movieDetailVM by viewModels<MovieDetailsViewModel> { MovieDetailsViewModel.Factory}
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -15,15 +15,17 @@ import com.example.mycinema.list.data.ListRepository
 import com.example.mycinema.list.data.MovieListRepository
 import com.example.mycinema.list.presentation.ui.MovieListUiState
 import com.example.mycinema.list.presentation.ui.MovieUiData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.net.UnknownHostException
+import javax.inject.Inject
 
-
-class MovieListViewModel(private val repository: ListRepository, private val dispatcher: CoroutineDispatcher = Dispatchers.IO) : ViewModel() {
+@HiltViewModel // gera quando viewmodel guarda dados etc
+class MovieListViewModel @Inject constructor(private val repository: ListRepository, private val dispatcher: CoroutineDispatcher = Dispatchers.IO) : ViewModel() {
 
     private val _uiNowPlayingMovies = MutableStateFlow<MovieListUiState>(MovieListUiState())
     val uiNowPlayingMovies: StateFlow<MovieListUiState> = _uiNowPlayingMovies
@@ -47,7 +49,7 @@ class MovieListViewModel(private val repository: ListRepository, private val dis
         fetchData("_uiUpcoming")
 
     }
-    companion object {
+    /*companion object {
         val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
 
             @Suppress("UNCHECKED_CAST")
@@ -61,7 +63,7 @@ class MovieListViewModel(private val repository: ListRepository, private val dis
             }
 
         }
-    }
+    }*/
 
     private fun fetchData(option: String) {
 
