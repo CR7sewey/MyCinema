@@ -13,18 +13,18 @@ import com.example.mycinema.list.presentation.MovieListViewModel
 import com.example.mycinema.list.presentation.ui.MovieListScreen
 
 @Composable
-fun CineNowApp(listViewModel: MovieListViewModel, movieDetailVM: MovieDetailsViewModel, modifier: Modifier = Modifier) {
+fun CineNowApp() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "movieList") {
         composable(route = "movieList") {
-            MovieListScreen(navController, listViewModel)
+            MovieListScreen(navController)
         }
         composable(route = "movieDetail"+ "/{itemId}", arguments = listOf(navArgument("itemId"){ type=
             NavType.StringType})) { backStateEntry ->
             MovieDetailsScreen(
                 requireNotNull(
                     backStateEntry.arguments?.getString("itemId").toString()
-                ), navController, movieDetailVM
+                ), navController
             )
         }
     }

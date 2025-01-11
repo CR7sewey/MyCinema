@@ -10,14 +10,17 @@ import com.example.mycinema.common.data.remote.RetroFitClient
 import com.example.mycinema.common.data.remote.model.MovieDTO
 import com.example.mycinema.detail.data.DetailService
 import com.example.mycinema.detail.presentation.ui.MovieDetailsUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.net.UnknownHostException
+import javax.inject.Inject
 
-class MovieDetailsViewModel(private val detailService: DetailService) : ViewModel() {
+@HiltViewModel
+class MovieDetailsViewModel @Inject constructor(private val detailService: DetailService) : ViewModel() {
 
     private val _uiGetMovie = MutableStateFlow<MovieDetailsUiState?>(null)
     val uiGetMovie: StateFlow<MovieDetailsUiState?> = _uiGetMovie
@@ -30,7 +33,7 @@ class MovieDetailsViewModel(private val detailService: DetailService) : ViewMode
         //fetchData()
     }
 
-    companion object {
+    /*companion object {
         val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
 
             @Suppress("UNCHECKED_CAST")
@@ -43,7 +46,7 @@ class MovieDetailsViewModel(private val detailService: DetailService) : ViewMode
             }
 
         }
-    }
+    }*/
 
     // para limpar o valor quando mudo de screen (so uma activity que fica smepre "viva") (pois nao ta dentro do compose, ele segura o valor (retem os dados)
     // e nao deixa de existir

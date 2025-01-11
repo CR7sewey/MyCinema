@@ -28,13 +28,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.mycinema.common.data.remote.model.MovieDTO
 import com.example.mycinema.detail.presentation.MovieDetailsViewModel
 
 @Composable
-fun MovieDetailsScreen(itemId: String, navController: NavHostController, movieDetailVM: MovieDetailsViewModel) {
+fun MovieDetailsScreen(itemId: String, navController: NavHostController, movieDetailVM: MovieDetailsViewModel = hiltViewModel()) {
 
     val getMovie by movieDetailVM.uiGetMovie.collectAsState()
     movieDetailVM.fetchData(itemId)
@@ -64,7 +65,7 @@ private fun MovieDetailsContent(movie: MovieDetailsUiState?, navController: NavH
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(onClick = {
-                    movieDetailVM.cleanMovieId()
+                    //movieDetailVM.cleanMovieId()
                     navController.popBackStack()
                 }) {
                     Icon(

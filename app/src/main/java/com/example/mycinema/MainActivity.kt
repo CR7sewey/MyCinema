@@ -15,8 +15,8 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val listViewModel by viewModels<MovieListViewModel>() // {MovieListViewModel.Factory}
-    private val movieDetailVM by viewModels<MovieDetailsViewModel> { MovieDetailsViewModel.Factory}
+    //private val listViewModel by viewModels<MovieListViewModel>() // {MovieListViewModel.Factory}
+    //private val movieDetailVM by viewModels<MovieDetailsViewModel>() // { MovieDetailsViewModel.Factory}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     //Log.i("TESTE", apiService.getCurrentMovies().toString())
 
-                    CineNowApp(listViewModel, movieDetailVM)
+                    CineNowApp()
                 }
             }
         }
