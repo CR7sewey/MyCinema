@@ -4,8 +4,9 @@ import com.example.mycinema.common.data.local.MovieCategory
 import com.example.mycinema.common.data.local.MovieDao
 import com.example.mycinema.common.data.local.MovieEntity
 import com.example.mycinema.common.data.model.Movie
+import javax.inject.Inject
 
-class MovieListLocalDataSource(private val movieDao: MovieDao): LocalDataSource {
+class MovieListLocalDataSource @Inject constructor(private val movieDao: MovieDao): LocalDataSource {
 
     override suspend fun insertAll(moviesList: List<Movie>, categoryName: String) {
         val movieEntity = moviesList.map { movie -> MovieEntity(movie.id, movie.title, movie.overview, movie.image,

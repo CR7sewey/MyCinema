@@ -11,7 +11,9 @@ import androidx.compose.ui.Modifier
 import com.example.mycinema.detail.presentation.MovieDetailsViewModel
 import com.example.mycinema.list.presentation.MovieListViewModel
 import com.example.mycinema.ui.theme.MyCinemaTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val listViewModel by viewModels<MovieListViewModel>() // {MovieListViewModel.Factory}
     private val movieDetailVM by viewModels<MovieDetailsViewModel> { MovieDetailsViewModel.Factory}

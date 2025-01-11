@@ -3,8 +3,9 @@ package com.example.mycinema.list.data.remote
 import android.accounts.NetworkErrorException
 import com.example.mycinema.common.data.local.MovieCategory
 import com.example.mycinema.common.data.model.Movie
+import javax.inject.Inject
 
-class MovieListRemoteDataSource(private val listService: ListService) : RemoteDataSource {
+class MovieListRemoteDataSource @Inject constructor(private val listService: ListService) : RemoteDataSource {
 
     override suspend fun getCurrentMovies(): Result<List<Movie>?> {
         return try {

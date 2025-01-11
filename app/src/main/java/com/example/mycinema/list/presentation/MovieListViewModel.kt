@@ -11,10 +11,12 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.mycinema.MyCinemaApplication
 import com.example.mycinema.common.data.model.Movie
 import com.example.mycinema.common.data.remote.model.MovieResponse
+import com.example.mycinema.dependencyInjection.DispatcherIO
 import com.example.mycinema.list.data.ListRepository
 import com.example.mycinema.list.data.MovieListRepository
 import com.example.mycinema.list.presentation.ui.MovieListUiState
 import com.example.mycinema.list.presentation.ui.MovieUiData
+import dagger.Provides
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -25,7 +27,7 @@ import java.net.UnknownHostException
 import javax.inject.Inject
 
 @HiltViewModel // gera quando viewmodel guarda dados etc
-class MovieListViewModel @Inject constructor(private val repository: ListRepository, private val dispatcher: CoroutineDispatcher = Dispatchers.IO) : ViewModel() {
+class MovieListViewModel @Inject constructor(private val repository: ListRepository, @DispatcherIO private val dispatcher: CoroutineDispatcher = Dispatchers.IO) : ViewModel() {
 
     private val _uiNowPlayingMovies = MutableStateFlow<MovieListUiState>(MovieListUiState())
     val uiNowPlayingMovies: StateFlow<MovieListUiState> = _uiNowPlayingMovies
@@ -64,7 +66,6 @@ class MovieListViewModel @Inject constructor(private val repository: ListReposit
 
         }
     }*/
-
     private fun fetchData(option: String) {
 
         viewModelScope.launch(dispatcher) { // Suspend configuration != callback one
